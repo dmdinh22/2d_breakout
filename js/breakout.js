@@ -49,11 +49,20 @@ function draw() {
     if ( x + dx > canvas.width-ballRadius || x + dx < ballRadius ) {
         dx = -dx;
     }
-    // check if ball is touching top or bottom of canvas, reverse direction
-    if ( y + dy > canvas.height-ballRadius || y + dy < ballRadius ) {
+    // check if ball is tonly hitting top wall, 
+    // if bottom check to see if it hits the paddle, otherwise GG
+    if (y + dy < ballRadius) {
         dy = -dy;
+    } else if (y + dy > canvas.height-ballRadius) {
+        if (x > paddleX && x < paddleX + paddleWidth) {
+            dy = -dy;
+        }
+        else {
+            alert('GG');
+            document.location.reload();
+        }
     }
-
+    
     // only let paddle move within boundaraies of the canvas
     if ( rightPressed && paddleX < canvas.width-paddleWidth ) {
         paddleX += 7;
@@ -62,6 +71,10 @@ function draw() {
         paddleX -= 7;
     }
 } //draw
+
+// listen for key presses - vanilla
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
 
 function keyDownHandler(e) {
     if(e.keyCode == 39) {
@@ -80,9 +93,6 @@ function keyUpHandler(e) {
         leftPressed = false;
     }
 } //keyUpHandler
-
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
 
 // run code every 10ms to cause movement 
 // on frames, like movies
