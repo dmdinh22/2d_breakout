@@ -32,9 +32,46 @@ let bricks = [];
 for(c=0; c < brickColumnCount; c++) {
     bricks[c] = [];
     for(r=0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0 };
+        bricks[c][r] = { x: 0, y: 0, status: 1 };
     }
 }
+
+// listen for key presses - vanilla
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
+
+function keyDownHandler(e) {
+    if(e.keyCode == 39) {
+        rightPressed = true;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = true;
+    }
+} //keyDownHandler
+
+function keyUpHandler(e) {
+    if(e.keyCode == 39) {
+        rightPressed = false;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = false;
+    }
+} //keyUpHandler
+
+function collisionDetection() {
+    for (c = 0; c < brickColumnCount; c++) {
+        for (r = 0; r < brickRowCount; r++) {
+            let b = bricks[c][r];
+            if (b.status == 1) {
+                if (x > b.x && x < b.x+brickWidth 
+                    && y > b.y && y < b.y+brickHeight) {
+                    dy = -dy;
+                    b.status = 0;
+                }
+            }
+        }
+    }
+} //collisionDetection
 
 function drawBall() {
     context.beginPath();
@@ -56,15 +93,17 @@ function drawBricks() {
     // loop through bricks and draw onto canvas
     for( c=0; c < brickColumnCount; c++) {
         for( r=0; r < brickRowCount; r++) {
-            let brickX = (c * ( brickWidth + brickPadding )) + brickOffsetLeft;
-            let brickY = (r * ( brickHeight + brickPadding )) + brickOffsetTop;
-            bricks[c][r].x = brickX;
-            bricks[c][r].y = brickY;
-            context.beginPath();
-            context.rect(brickX, brickY, brickWidth, brickHeight);
-            context.fillStyle = '#0095DD';
-            context.fill();
-            context.closePath();
+            if(bricks[c][r].status == 1) {
+                var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+                var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+                bricks[c][r].x = brickX;
+                bricks[c][r].y = brickY;
+                context.beginPath();
+                context.rect(brickX, brickY, brickWidth, brickHeight);
+                context.fillStyle = '#0095DD';
+                context.fill();
+                context.closePath();
+            }
         }
     }
 } //drawBricks
@@ -76,7 +115,7 @@ function draw() {
     drawBricks();
     drawBall();
     drawPaddle();
-    
+    collisionDetection();
     // ball will be drawn in new position on every interval update
     x += dx;
     y += dy;
@@ -108,27 +147,7 @@ function draw() {
     }
 } //draw
 
-// listen for key presses - vanilla
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
 
-function keyDownHandler(e) {
-    if(e.keyCode == 39) {
-        rightPressed = true;
-    }
-    else if(e.keyCode == 37) {
-        leftPressed = true;
-    }
-} //keyDownHandler
-
-function keyUpHandler(e) {
-    if(e.keyCode == 39) {
-        rightPressed = false;
-    }
-    else if(e.keyCode == 37) {
-        leftPressed = false;
-    }
-} //keyUpHandler
 
 // run code every 10ms to cause movement 
 // on frames, like movies
