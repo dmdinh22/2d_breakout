@@ -27,6 +27,9 @@ let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
 
+// keeping score
+let score = 0;
+
 // building out a 2d array for the bricks
 let bricks = [];
 for(c=0; c < brickColumnCount; c++) {
@@ -67,6 +70,7 @@ function collisionDetection() {
                     && y > b.y && y < b.y+brickHeight) {
                     dy = -dy;
                     b.status = 0;
+                    score++;
                 }
             }
         }
@@ -94,8 +98,8 @@ function drawBricks() {
     for( c=0; c < brickColumnCount; c++) {
         for( r=0; r < brickRowCount; r++) {
             if(bricks[c][r].status == 1) {
-                var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
-                var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+                let brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+                let brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
                 bricks[c][r].x = brickX;
                 bricks[c][r].y = brickY;
                 context.beginPath();
@@ -108,6 +112,11 @@ function drawBricks() {
     }
 } //drawBricks
 
+function drawScore() {
+    context.font = "16px Arial";
+    context.fillStyle = "#0095DD";
+    context.fillText("Score: "+score, 8, 20);
+} //drawScore
 function draw() {
     // clear canvas before each frame to not leave a trail
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -116,6 +125,7 @@ function draw() {
     drawBall();
     drawPaddle();
     collisionDetection();
+    drawScore();
     // ball will be drawn in new position on every interval update
     x += dx;
     y += dy;
