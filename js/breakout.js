@@ -61,6 +61,16 @@ function keyUpHandler(e) {
     }
 } //keyUpHandler
 
+// listen for mouse movements
+document.addEventListener("mousemove", mouseMoveHandler, false);
+
+function mouseMoveHandler(e) {
+    let relativeX = e.clientX - canvas.offsetLeft;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
+    }
+} //mouseMoveHandler
+
 function collisionDetection() {
     for (c = 0; c < brickColumnCount; c++) {
         for (r = 0; r < brickRowCount; r++) {
@@ -71,6 +81,10 @@ function collisionDetection() {
                     dy = -dy;
                     b.status = 0;
                     score++;
+                    if (score == brickRowCount * brickColumnCount) {
+                        alert('Winner, Winner, Chicken Dinner!');
+                        document.location.reload();
+                    }
                 }
             }
         }
@@ -113,10 +127,11 @@ function drawBricks() {
 } //drawBricks
 
 function drawScore() {
-    context.font = "16px Arial";
-    context.fillStyle = "#0095DD";
-    context.fillText("Score: "+score, 8, 20);
+    context.font = '16px Arial';
+    context.fillStyle = '#0095DD';
+    context.fillText('Score: ' + score, 8, 20);
 } //drawScore
+
 function draw() {
     // clear canvas before each frame to not leave a trail
     context.clearRect(0, 0, canvas.width, canvas.height);
