@@ -191,10 +191,9 @@ function draw() {
     else if ( leftPressed && paddleX > 0 ) {
         paddleX -= 7;
     }
+
+    // optimize rendering of game
+    requestAnimationFrame(draw);
 } //draw
 
-
-
-// run code every 10ms to cause movement 
-// on frames, like movies
-setInterval(draw, 10);
+draw();
