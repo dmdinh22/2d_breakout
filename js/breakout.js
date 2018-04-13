@@ -30,6 +30,9 @@ let brickOffsetLeft = 30;
 // keeping score
 let score = 0;
 
+// player lives
+let lives = 3;
+
 // building out a 2d array for the bricks
 let bricks = [];
 for(c=0; c < brickColumnCount; c++) {
@@ -132,6 +135,12 @@ function drawScore() {
     context.fillText('Score: ' + score, 8, 20);
 } //drawScore
 
+function drawLives() {
+    context.font = '16px Arial';
+    context.fillStyle = '#0095DD';
+    context.fillText('Lives: ' + lives, canvas.width - 65, 20);
+} //drawLives
+
 function draw() {
     // clear canvas before each frame to not leave a trail
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -141,6 +150,8 @@ function draw() {
     drawPaddle();
     collisionDetection();
     drawScore();
+    drawLives();
+
     // ball will be drawn in new position on every interval update
     x += dx;
     y += dy;
@@ -158,8 +169,18 @@ function draw() {
             dy = -dy;
         }
         else {
-            alert('GG');
-            document.location.reload();
+            lives--;
+            if (!lives) {
+                alert('GG!');
+                document.location.reload();
+            }
+            else {
+                x = canvas.width / 2;
+                y = canvas.height - 30;
+                dx = 2;
+                dy = -2;
+                paddleX = (canvas.width - paddleWidth)/2;
+            }
         }
     }
 
